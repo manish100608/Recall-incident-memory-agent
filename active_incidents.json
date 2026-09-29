@@ -1,0 +1,56 @@
+[
+  {
+    "id": "INC-0902",
+    "service": "Payment API",
+    "severity": "SEV-1",
+    "status": "investigating",
+    "symptoms": ["HTTP 500s and p95 latency are climbing", "Database connection utilization is above 90%", "Connection acquisition waiters increased after the latest payment-service rollout"],
+    "metrics": { "http_500_rate": 8.1, "p95_latency_ms": 1730, "db_connection_pct": 93, "cpu_pct": 64, "memory_pct": 70 },
+    "log_snippet": [
+      "2026-09-29T14:02:11.430Z ERROR req=pay-a91e host=pay-api-2.prod acquire_connection timed out wait_ms=500",
+      "2026-09-29T14:02:14.020Z WARN req=pool-58bd host=pay-api-1.prod active=186 idle=6 max=200 waiters=38",
+      "2026-09-29T14:02:16.671Z ERROR req=pay-c13f host=pay-api-3.prod authorization failed status=500 stage=db_write",
+      "2026-09-29T14:02:20.313Z INFO req=deploy-4b50 host=release-runner-1.prod rollout version=2.4.1 batch=75pct",
+      "2026-09-29T14:02:25.948Z WARN req=pay-6d77 host=pay-api-2.prod connection returned=false duration_ms=1702"
+    ],
+    "deploy_version": "v2.4.1",
+    "started_at": "2026-09-29T14:02:00Z",
+    "root_cause": null
+  },
+  {
+    "id": "INC-0903",
+    "service": "Notification Worker",
+    "severity": "SEV-2",
+    "status": "investigating",
+    "symptoms": ["Right-to-left locale templates lose bidirectional control marks during preview rendering", "The rendering divergence began after the catalog's Unicode normalization profile update", "Only the rendered text is malformed while source templates remain intact"],
+    "metrics": { "http_500_rate": 0.1, "p95_latency_ms": 690, "db_connection_pct": 21, "cpu_pct": 37, "memory_pct": 49 },
+    "log_snippet": [
+      "2026-09-29T14:11:02.003Z WARN req=ntf-cad2 host=notify-worker-4.prod locale=ar template=campaign-31 preview_grapheme_count=42 source_count=44",
+      "2026-09-29T14:11:05.144Z INFO req=ntf-cad2 host=notify-worker-4.prod render_preview=true bidi_controls=0 locale_fallback=none",
+      "2026-09-29T14:11:08.360Z WARN req=cat-04fa host=template-catalog-2.prod revision=2026.09.28 normalization_profile=unicode-legacy",
+      "2026-09-29T14:11:13.902Z ERROR req=ntf-a7c0 host=notify-worker-4.prod preview mismatch expected_length=44 actual_length=42",
+      "2026-09-29T14:11:19.448Z INFO req=ntf-40e1 host=notify-worker-4.prod source_template_hash=7f3c catalog_profile=unicode-v15"
+    ],
+    "deploy_version": "notify-router-3.9.0",
+    "started_at": "2026-09-29T14:11:00Z",
+    "root_cause": null
+  },
+  {
+    "id": "INC-0904",
+    "service": "Auth Service",
+    "severity": "SEV-2",
+    "status": "investigating",
+    "symptoms": ["Newly nested directory groups fall back to the default application role after SCIM sync", "Interactive login and session creation complete normally for existing groups", "Role mismatch began after the directory-path mapping update"],
+    "metrics": { "http_500_rate": 0.1, "p95_latency_ms": 392, "db_connection_pct": 24, "cpu_pct": 34, "memory_pct": 50 },
+    "log_snippet": [
+      "2026-09-29T14:18:01.970Z WARN req=auth-2a7e host=auth-api-3.prod group_sync=success groups=6 expected_role=partner-editor actual_role=default",
+      "2026-09-29T14:18:04.205Z INFO req=auth-2a7e host=auth-api-3.prod session_created=true nested_group_path=/Org/Platform/Analytics",
+      "2026-09-29T14:18:08.422Z WARN req=auth-99c3 host=auth-api-1.prod role_binding=default matched_rules=0 mapping_version=32",
+      "2026-09-29T14:18:12.811Z INFO req=auth-080d host=auth-api-1.prod db_pool_waiters=0 cpu_pct=32",
+      "2026-09-29T14:18:20.415Z WARN req=scim-112a host=directory-sync-2.prod nested_group_path=/Org/Platform/Analytics fallback_role=default"
+    ],
+    "deploy_version": "auth-federation-6.4.1",
+    "started_at": "2026-09-29T14:18:00Z",
+    "root_cause": null
+  }
+]

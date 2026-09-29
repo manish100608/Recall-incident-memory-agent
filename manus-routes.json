@@ -1,0 +1,7 @@
+{
+  "routes": [
+    { "path": "/", "title": "Investigation" },
+    { "path": "/memory", "title": "Memory Timeline" },
+    { "path": "/evaluation", "title": "Evaluation" }
+  ]
+}
